@@ -32,7 +32,15 @@ Select the following wizard options:
 * Continue on the static IP (ensure you have a static IP, I do it with a DHCP reservation but it is up to you).
 * Upstream DNS: select Custom
 * Enter the following IP address (we will change all this afterwards): 194.242.2.2
-* 
+* Enable query loging to allow for better statistics recording everything (this is all optional, you can use your criteria here).
 
+You should have now the pihole server installed. Configure the password for your webserver doing the following:
+>sudo pihole setpassword *yourpassword*
 
-Now we need to configure it, navigate to its own URL **ipaddress/admin**
+Access its own URL **ipaddress/admin** and navigate to the *Lists* section of the menu. There add a new list to block:
+>https://big.oisd.nl
+>https://energized.pro/ultimate/hosts.txt
+
+After doing this update the gravity with:
+>sudo pihole -g
+
