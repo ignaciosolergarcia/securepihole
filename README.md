@@ -20,6 +20,15 @@ E  -->  F[Mullvad DNS Server]
 F  -->  G[Internet]
 ```
 
+```mermaid
+flowchart  LR
+A[DNS Request] --> B[DNS Server - Raspberry Pi]
+C --> D[Pi-hole]
+D --> E[Cloudflared]
+E --> F[Mullvad DNS Server]
+F --> G[Internet]
+```
+
 ## Steps
 
 ### Step 1 (configure your SD Card to bool your Raspberry)
