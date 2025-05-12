@@ -1,3 +1,4 @@
+
 # Secure DNS with your Raspberry (how to install Pi-Hole with DNS over HTTPS)
 
 ## High Level Design - System Architecture
@@ -57,8 +58,9 @@ Select the following wizard options:
 You should have now the pihole server installed. Configure the password for your webserver doing the following:
 >sudo pihole setpassword *yourpassword*
 
-Access its own URL **ipaddress/admin** and navigate to the *Lists* section of the menu. There add a new list to block:
+Access its own URL **ipaddress/admin** and navigate to the *Lists* section of the menu. There add these two new lists to block:
 >https://big.oisd.nl
+
 >https://energized.pro/ultimate/hosts.txt
 
 After doing this update the gravity with:
@@ -94,6 +96,7 @@ create  0640  root  adm
 Last but not least, given the hardware being used restarting the server weekly will help to keep the performance stable. I suggest doing it with cron like this:
 >sudo crontab -e
 >0 4 * * 0 systemctl restart pihole-FTL
+
 
 
 
