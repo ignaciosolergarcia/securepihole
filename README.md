@@ -9,6 +9,17 @@ The system will accept requests **DNS over TLS** thanks to *Stubby* that will re
 * Pihole
 * Cloudflared
 
+```mermaid
+flowchart  LR
+
+A[DNS Request DNS over TTL]  -->  B[DNS Server - Raspberry Pi]
+B  -->  C[Stubby]
+C  -->  D[Pi-hole]
+D  -->  E[Cloudflared]
+E  -->  F[Mullvad DNS Server]
+F  -->  G[Internet]
+```
+
 ## Steps
 
 ### Step 1 (configure your SD Card to bool your Raspberry)
@@ -44,15 +55,5 @@ Access its own URL **ipaddress/admin** and navigate to the *Lists* section of th
 After doing this update the gravity with:
 >sudo pihole -g
 
-architecture-beta
-    group api(cloud)[API]
 
-    service db(database)[Database] in api
-    service disk1(disk)[Storage] in api
-    service disk2(disk)[Storage] in api
-    service server(server)[Server] in api
-
-    db:L -- R:server
-    disk1:T -- B:server
-    disk2:T -- B:db
 
