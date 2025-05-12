@@ -23,10 +23,10 @@ F  -->  G[Internet]
 ```mermaid
 flowchart  LR
 A[DNS Request] --> B[DNS Server - Raspberry Pi]
-C --> D[Pi-hole]
-D --> E[Cloudflared]
-E --> F[Mullvad DNS Server]
-F --> G[Internet]
+B --> C[Pi-hole]
+C --> D[Cloudflared]
+D --> E[Mullvad DNS Server]
+E --> F[Internet]
 ```
 
 ## Steps
