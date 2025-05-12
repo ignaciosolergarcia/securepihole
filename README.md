@@ -1,4 +1,3 @@
-
 # Secure DNS with your Raspberry (how to install Pi-Hole with DNS over HTTPS)
 
 ## High Level Design - System Architecture
@@ -67,19 +66,15 @@ After doing this update the gravity with:
 >sudo pihole -g
 
 ### Step 4 (prepare the context to properly run  Pi-Hole)
-Things pending: 
-- to generate SSL certificate and ensure that the server can be accessed internally and externally
-- ensure that there is no degradation overtime on the performance (log management & rotation?)
-
 As Pi-Hole performance can degrade over time due to multiple reasons and as we are running on low specs hardware let's ensure we get the system always as performant as today:
 
-Edit `/etc/pihole/pihole-FTL.conf`and setup the following values:
+Create the file `/etc/pihole/pihole-FTL.conf`and setup the following values:
 
 ```  bash
 MAXDBDAYS=7
 MAXLOGAGE=72
 ```
-This will ensure that the system performs overtime but will prevent us from having statistics for longer than a week. You can  teak the `MAXDBDAYS` value upon your specific needs.
+This will ensure that the system performs overtime but will prevent us from having statistics for longer than a week. You can  tweak the `MAXDBDAYS` value upon your specific needs.
 
 Another thing to protect your system is to ensure that  no log file grows unlimited generating issues with free space. To do it create a file called `/etc/logrotate.d/custom-logs` with the following content.
 
@@ -97,6 +92,12 @@ Last but not least, given the hardware being used restarting the server weekly w
 >sudo crontab -e
 >0 4 * * 0 systemctl restart pihole-FTL
 
+That's all regarding performance of the system, now let's put the right certificate to ensure that we can access the website using SSL (this is optional but I don't like navigating with HTTP at all, even at home).
 
+Install *certbot* in order to generate the certificate:
+>sudo apt install certbot
 
-
+And then generate the certificate like this (of course you will need a domain name):
+>sudo systemctl stop pihole-FTL
+>sudo certbot certonly --standalone -d yourdnsname
+>sudo systemctl start pihole-FTL
