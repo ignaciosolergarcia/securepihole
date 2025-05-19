@@ -28,6 +28,33 @@ C --> D[Cloudflared]
 D --> E[Mullvad DNS Server]
 E --> F[Internet]
 ```
+## Network design
+This tutorial is designed to work with the following network topology that presents specific challenges and it is considered to be a common one. We will identify the steps linked to this topology so you can adapt them to your own if needed.
+
+```mermaid
+
+flowchart LR
+
+A[Internet] --> B[DNS Request]
+
+A[Internet] --> C[DNS over TTL Request]
+
+A[Internet] --> D[External Web domain]
+
+B --> E[Router]
+
+C --> E[Router]
+
+D --> E[Router]
+
+E --> F[Internal Network]
+
+F --> H[Pi-Hole]
+
+G[Internal Web domain] --> H
+
+```
+We want to access all the services offered by the *Pi-Hole* from the *Internet* and the *Network* as well. In our case the Router has a dyndns functionality so we will be using that domain to access the services from internet. We will refer to that domain as the `dyndns-router-internet-domain`, to access these services from within the network we will use the `internal.dyndns-router-internet-domain`
 
 ## Steps
 
@@ -45,13 +72,18 @@ Update everything, SO, packages and Firmware:
 > sudo reboot
 
 ### Step 3 (install Pi-Hole)
-Let's install the main package, *Pi-Hole*
+Before installing the main package let's install lighthttp so we can serve the *Pi-Hole* web using it (otherwise the web will be served by the *Pi-Hole* service itself but it does not allow us to use SSL certificates.
+>sudo apt install lighttpd
+>sudo apt install php-cgi php-common php
+>sudo systemctl restart lighttpd
+
+Now, let's install the main package, *Pi-Hole*
 >curl -sSL https://install.pi-hole.net | bash
 
 Select the following wizard options:
 * Continue on the static IP (ensure you have a static IP, I do it with a DHCP reservation but it is up to you).
 * Upstream DNS: select Custom
-* Enter the following IP address (we will change all this afterwards): 194.242.2.2
+* Enter the following IP address (we will change all this afterwards): 194.242.2.2 (it is the *Mullvad* server address)
 * Enable query loging to allow for better statistics recording everything (this is all optional, you can use your criteria here).
 
 You should have now the pihole server installed. Configure the password for your webserver doing the following:
@@ -99,5 +131,7 @@ Install *certbot* in order to generate the certificate:
 
 And then generate the certificate like this (of course you will need a domain name):
 >sudo systemctl stop pihole-FTL
->sudo certbot certonly --standalone -d yourdnsname
+>sudo certbot certonly --standalone -d `dyndns-router-internet-domain`
 >sudo systemctl start pihole-FTL
+
+### Step 5 (install Cloudflared)
